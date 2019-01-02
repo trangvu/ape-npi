@@ -1,0 +1,67 @@
+
+cell_size: 128
+attn_size: 128
+embedding_size: 128
+
+layers: 1
+bidir: True
+cell_type: LSTM
+weight_scale: 0.1
+
+data_dir: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG
+model_dir: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG/model
+log_dir: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG/model/log
+rnn_lm_model_dir: /home/trang/workspace/ape/lm/model
+rnn_lm_cell_name: Model/RNN/multi_rnn_cell/cell_0/basic_lstm_cell
+origin_model_ckpt: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG/model
+train_prefix: train.concat
+vocab_prefix: vocab.concat
+batch_size: 32
+
+optimizer: sgd
+learning_rate: 1.0
+learning_rate_decay_factor: 0.8
+decay_every_n_epoch: 0.5
+decay_after_n_epoch: 1
+
+
+steps_per_checkpoint: 1000
+steps_per_eval: 1000
+score_function: corpus_scores_ter
+
+max_gradient_norm: 1.0
+max_epochs: 8
+batch_mode: standard
+read_ahead: 10
+
+encoders:
+  - name: mt
+    attention_type: local
+    attn_window_size: 0
+    max_len: 40
+
+  - name: src
+    attention_type: global
+    max_len: 40
+
+decoders:
+  - name: edits
+    max_len: 50
+
+pred_edits: True
+ref_ext: pe
+
+use_dropout: True
+rnn_input_dropout: 0.5
+initial_state_dropout: 0.5
+
+chained_encoders: True
+chaining_strategy: map_attns
+chaining_non_linearity: True
+chaining_loss_ratio: 0.5
+chaining_stop_gradient: False
+use_lstm_full_state: True
+chained_execute: True
+freeze_variables:
+  - decoder_edits/rnn_lm/basic_lstm_cell/kernel:0
+  - decoder_edits/rnn_lm/basic_lstm_cell/bias:0

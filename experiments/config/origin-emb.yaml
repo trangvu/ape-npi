@@ -1,0 +1,62 @@
+
+cell_size: 128
+attn_size: 128
+embedding_size: 128
+
+layers: 1
+bidir: True
+cell_type: LSTM
+weight_scale: 0.1
+
+data_dir: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG
+model_dir: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG/model
+log_dir: /media/trang/E0DA5356DA532854/Users/ragvu/workspace/ape/dataset_en_de/APE16_LIG/model/log
+batch_size: 32
+embedding_output_dir: output_dir
+rnn_mt_model_dir: /home/xvuthith/da33/trang/jobs/experiment/mt/mt-en-de-20180527-141907/mt-small/model/checkpoints
+
+optimizer: sgd
+learning_rate: 1.0
+learning_rate_decay_factor: 0.95
+decay_every_n_epoch: 1
+decay_after_n_epoch: 3
+
+
+steps_per_checkpoint: 1000
+steps_per_eval: 1000
+score_function: corpus_scores_ter
+
+max_gradient_norm: 1.0
+max_epochs: 80
+batch_mode: standard
+read_ahead: 10
+
+encoders:
+  - name: mt
+    attention_type: local
+    attn_window_size: 0
+    max_len: 37
+    embedding_file: /home/xvuthith/da33/trang/jobs/experiment/lm-de-20180526-133235/lm-small/model/embedding.txt
+  - name: src
+    attention_type: global
+    max_len: 33
+    embedding_file: /home/xvuthith/da33/trang/jobs/experiment/lm-en-20180526-190530/lm-small/model/embedding.txt
+
+decoders:
+  - name: edits
+    max_len: 45
+    cell_size: 512
+
+pred_edits: True
+ref_ext: pe
+
+use_dropout: True
+rnn_input_dropout: 0.5
+initial_state_dropout: 0.5
+
+chained_encoders: True
+chaining_strategy: map_attns
+chaining_non_linearity: True
+chaining_loss_ratio: 0.5
+chaining_stop_gradient: False
+use_lstm_full_state: True
